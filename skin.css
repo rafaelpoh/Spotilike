@@ -1,5 +1,5 @@
 body {
-  background-color: #22A9CA;
+  background-color: #103640;
 }
 .sidebar {
   position: fixed;
@@ -8,6 +8,7 @@ body {
   bottom: 0;
   padding: 12px;
   width: 300px;
+  margin: 10px;
 }
 .sidebar_navigation {
   background-color: #3B6A75;
@@ -38,4 +39,113 @@ width: 80px;
     font-weight: 600;
     font-size: 14px;
     font-family: "DM Sans", sans-serif;
+}
+.biblioteca{
+  background-color: #3B6A75;
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 4px 8px;
+  color: #12c9f7;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 14px;
+}
+.biblioteca .biblioteca_content{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+.biblioteca .biblioteca_button{
+  margin-right: 10px;
+  color: #12c9f7;
+  background-color: transparent;
+  border: 0;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: "DM Sans", sans-serif;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  padding: 20px 10px;
+  display: flex;
+}
+.biblioteca .biblioteca_button .fa{
+  font-size: 20px;
+  margin-right: 10px;
+  font-weight: 300;
+  padding-right: 8px;
+}
+.biblioteca .biblioteca_content .fa-plus{
+  margin: 24px 10px;
+}
+.playlist{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  color: #12c9f7;
+  background-color: #3B6A75;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 8px 0;
+  padding: 16px 20px;
+  border-radius: 10px;
+}
+.playlist .playlist_content{
+  display: flex;
+  flex-direction: column;
+}
+.playlist_content .text{
+  padding-bottom: 14px;
+  color: aliceblue;
+  font-family: "DM Sans", sans-serif;
+}
+.playlist_content .title{
+  font-weight: 700;
+}
+.playlist_content .subtitle{
+  font-weight: 500;
+  font-size: 12px;
+}
+.playlist_content .playlist_button{
+  display: flex;
+  justify-content: center;
+  background-color: cornflowerblue;
+  color: rgb(176, 255, 255);
+  font-weight: 700;
+  border-radius: 20px;
+  font-size: 15px ;
+  font-family: "DM Sans", sans-serif;
+  text-decoration: none;
+  text-transform: none;
+  padding: 10px;
+  border: 0;
+  width: 113px;
+  margin-top: 12px;
+}
+.sidebar .cookies{
+  margin: 20px 20px;
+}
+.sidebar .cookies a{
+    color: #12c9f7;
+    font-weight: 800;
+    font-size: 10px;
+    text-decoration: none;
+}
+.sidebar .cookies a:hover{
+  text-decoration: underline;
+}
+.sidebar .idiomas .idioma_button{
+  background-color: transparent;
+  border: 1px solid #12c9f7;
+  color: #12c9f7;
+  cursor: pointer;
+  align-items: center;
+  font-weight: bold;
+  width: 170px;
+  margin: 8px;
+  padding: 8px;
+  border-radius: 20px;
 }
