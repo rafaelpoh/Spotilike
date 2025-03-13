@@ -1,0 +1,38 @@
+.premium {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to right, var(--bg-icon), var(--bg-arrow));
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+}
+.premium .text {
+   flex-shrink: 0;
+}
+.premium .premium__titulo {
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.premium .premium__sub {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.premium button {
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 14px 30px;
+    border: 0px;
+    border-radius: 40px;
+    cursor: pointer;
+    flex-shrink: 0;
+}

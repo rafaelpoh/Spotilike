@@ -1,5 +1,6 @@
 body {
   background-color: #103640;
+  font-family: var(--font);
 }
 .sidebar {
   position: fixed;
@@ -11,12 +12,12 @@ body {
   margin: 10px;
 }
 .sidebar_navigation {
-  background-color: #3B6A75;
+  background-color: var(--bg-side-bar);
   border-radius: 8px;
   padding: 16px 0 16px 16px;
 }
 .logo{
-    background-color: #00C3F5;
+    background-color: var(--bg-icon);
     display: flex;
     border-radius: 8px;
     padding: 20px 20px 20px 75px;
@@ -35,17 +36,16 @@ width: 80px;
     padding: 10px 0;
 }
 .sidebar nav ul li a{
-    color: #12c9f7;
+    color: var(--text);
     font-weight: 600;
     font-size: 14px;
-    font-family: "DM Sans", sans-serif;
 }
 .biblioteca{
-  background-color: #3B6A75;
+  background-color: var(--bg-side-bar);
   border-radius: 8px;
   margin-top: 10px;
   padding: 4px 8px;
-  color: #12c9f7;
+  color: var(--text);
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -59,12 +59,11 @@ width: 80px;
 }
 .biblioteca .biblioteca_button{
   margin-right: 10px;
-  color: #12c9f7;
+  color: var(--text);
   background-color: transparent;
   border: 0;
   font-size: 14px;
   font-weight: 700;
-  font-family: "DM Sans", sans-serif;
   text-align: center;
   text-decoration: none;
   text-transform: none;
@@ -85,8 +84,8 @@ width: 80px;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
-  color: #12c9f7;
-  background-color: #3B6A75;
+  color: var(--text);
+  background-color: var(--bg-side-bar);
   font-weight: 600;
   font-size: 14px;
   margin: 8px 0;
@@ -99,8 +98,7 @@ width: 80px;
 }
 .playlist_content .text{
   padding-bottom: 14px;
-  color: aliceblue;
-  font-family: "DM Sans", sans-serif;
+  color: var(--text-color);
 }
 .playlist_content .title{
   font-weight: 700;
@@ -112,12 +110,11 @@ width: 80px;
 .playlist_content .playlist_button{
   display: flex;
   justify-content: center;
-  background-color: cornflowerblue;
-  color: rgb(176, 255, 255);
+  background-color: var(--button-color);
+  color: var(--text);
   font-weight: 700;
   border-radius: 20px;
   font-size: 15px ;
-  font-family: "DM Sans", sans-serif;
   text-decoration: none;
   text-transform: none;
   padding: 10px;
@@ -129,7 +126,7 @@ width: 80px;
   margin: 20px 20px;
 }
 .sidebar .cookies a{
-    color: #12c9f7;
+    color: var(--text);
     font-weight: 800;
     font-size: 10px;
     text-decoration: none;
@@ -139,8 +136,8 @@ width: 80px;
 }
 .sidebar .idiomas .idioma_button{
   background-color: transparent;
-  border: 1px solid #12c9f7;
-  color: #12c9f7;
+  border: 1px solid var(--text);
+  color: var(--text);
   cursor: pointer;
   align-items: center;
   font-weight: bold;

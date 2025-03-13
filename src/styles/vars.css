@@ -1,0 +1,23 @@
+:root{
+     --font: 'Courier New', Courier, monospace;
+     --bg-side-bar: #13375e;
+     --text: #ffffff;
+     --bg-icon: #00C3F5;
+     --bg-arrow: #1b88e8c7;
+     --text-color: #f0f8ff;
+     --button-color: #6495ed;
+     --grid-gap: 24px;
+     --column-count: 4;
+}
+
+::placeholder {
+     color: var(--text);
+     opacity: 1;
+   }
+   @media screen and (max-width: 767px) {
+}
+
+@media screen and (min-width: 768px) and (max-width: 1274px) {
+}
+
+   
