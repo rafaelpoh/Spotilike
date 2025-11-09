@@ -12,7 +12,7 @@
    flex-shrink: 0;
 }
 .premium .premium__titulo {
-    color: #ffffff;
+    color: var(--text);
     text-transform: uppercase;
     font-weight: 400;
     font-size: 15px;
@@ -20,7 +20,7 @@
 }
 
 .premium .premium__sub {
-    color: #ffffff;
+    color: var(--text);
     font-size: 14px;
     font-weight: 500;
 }

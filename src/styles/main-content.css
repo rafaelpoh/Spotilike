@@ -73,7 +73,8 @@
     font-size: 16px;
     font-weight: 700;
     margin-right: 32px;
-    width: 15rem;
+    width: auto;
+    padding: 10px 20px;
     height: 2rem;
     border-radius: 15px;
 }
@@ -82,7 +83,8 @@
     background: var(--button-color);
     font-size: 16px;
     font-weight: 700;
-    width: 15rem;
+    width: auto;
+    padding: 10px 20px;
     height: 2rem;
     border-radius: 15px;
 }
@@ -92,7 +94,7 @@
     padding-top: 16px;
     margin: 10px;
     border-radius: 10px;
-    background-color: #121212;
+    background-color: var(--bg-container);
   }
   
   .playlist {
@@ -141,6 +143,7 @@
     gap: 16px;
     grid-gap: 32px;  /* não é usado mais */
     margin: 0 auto;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
   }
 
 .cards {
@@ -293,7 +296,7 @@
   }
   
   .artist-categorie {
-    color: #6a6a6a;
+    color: var(--text-light-grey);
     font-weight: 400;
     font-size: 0.875rem;
   }
@@ -307,7 +310,7 @@
     right: 10px;
     top: 120px;
     padding: 18px;
-    background-color: #1db954;
+    background-color: var(--bg-icon);
     border-radius: 100%;
     font-size: 14px;
     opacity: 0;

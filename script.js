@@ -35,8 +35,8 @@ const observer = new ResizeObserver(() => {  //mudanças no tamanho do elemento
   //largura mínima de 200px e máxima de 1fr (uma fração do espaço disponível).
   container.style.gridTemplateColumns = `repeat(${numColumns}, minmax(200px, 1fr))`;
 
-  console.log({ container });
-  console.log({ numColumns });
+  // console.log({ container });
+  // console.log({ numColumns });
 });
 //observando a mudança do elemento
 observer.observe(container);

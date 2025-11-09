@@ -24,7 +24,7 @@ function hidePlaylists() {
   playlistContainer.classList.add("hidden");
 }
 
-function busca (searchInput) {
+searchInput.addEventListener("input", () => {
   const searchTerm = searchInput.value.toLowerCase();
   if (searchTerm === "") {
     resultArtist.classList.add("hidden");
@@ -32,4 +32,4 @@ function busca (searchInput) {
     return;
   }
   requestApi(searchTerm);
-}
+});

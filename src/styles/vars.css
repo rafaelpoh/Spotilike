@@ -1,11 +1,13 @@
 :root{
      --font: 'Courier New', Courier, monospace;
-     --bg-side-bar: #13375e;
-     --text: #ffffff;
-     --bg-icon: #00C3F5;
-     --bg-arrow: #1b88e8c7;
-     --text-color: #f0f8ff;
-     --button-color: #6495ed;
+     --bg-side-bar: #1A1A1A; /* Dark black for the sidebar background */
+     --text: #FFFFFF; /* Pure white for general text */
+     --bg-icon: #007BFF; /* A vibrant blue for icons and accents */
+     --bg-arrow: #0056B3; /* A slightly darker blue for arrows, complementing --bg-icon */
+     --text-color: #E0E0E0; /* Off-white for general text, slightly softer than pure white */
+     --button-color: #007BFF; /* Same vibrant blue as --bg-icon for buttons */
+     --bg-container: #121212; /* Dark grey for the main content container */
+     --text-light-grey: #6a6a6a; /* Light grey for secondary text */
      --grid-gap: 24px;
      --column-count: 4;
 }
