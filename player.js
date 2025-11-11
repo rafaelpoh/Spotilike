@@ -5,6 +5,8 @@ let currentTrack = null;
 let spotifyDeviceId = null;
 let spotifyAccessToken = localStorage.getItem('spotify_access_token'); // Get from localStorage
 let spotifyRefreshToken = localStorage.getItem('spotify_refresh_token'); // Get from localStorage
+let tokenExpiresAt = localStorage.getItem('spotify_token_expires_at') ? parseInt(localStorage.getItem('spotify_token_expires_at')) : 0;
+let progressBarInterval;
 
 const BACKEND_URL = 'http://localhost:3001'; // Your backend URL
 
@@ -19,7 +21,10 @@ async function refreshAccessToken() {
         const data = await response.json();
         if (response.ok) {
             spotifyAccessToken = data.access_token;
+            // Spotify's refresh token endpoint usually returns expires_in
+            tokenExpiresAt = Date.now() + (data.expires_in * 1000); 
             localStorage.setItem('spotify_access_token', spotifyAccessToken);
+            localStorage.setItem('spotify_token_expires_at', tokenExpiresAt.toString());
             console.log('Access token refreshed successfully!');
             return spotifyAccessToken;
         } else {
@@ -27,8 +32,10 @@ async function refreshAccessToken() {
             // If refresh fails, clear tokens and prompt re-login
             localStorage.removeItem('spotify_access_token');
             localStorage.removeItem('spotify_refresh_token');
+            localStorage.removeItem('spotify_token_expires_at');
             spotifyAccessToken = null;
             spotifyRefreshToken = null;
+            tokenExpiresAt = 0;
             alert('Your session has expired. Please log in again.');
             return null;
         }
@@ -40,9 +47,9 @@ async function refreshAccessToken() {
 
 // Function to get a valid access token (either current or refreshed)
 async function getValidAccessToken() {
-    // For simplicity, we'll assume the token needs to be refreshed if it's old
-    // In a real app, you'd check token expiration time
-    if (!spotifyAccessToken) {
+    // Check if token is expired or about to expire (e.g., within 60 seconds)
+    if (!spotifyAccessToken || Date.now() >= tokenExpiresAt - 60000) { // 60 seconds buffer
+        console.log('Access token expired or expiring soon, attempting to refresh...');
         return await refreshAccessToken();
     }
     return spotifyAccessToken;
@@ -54,12 +61,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     const params = new URLSearchParams(window.location.search);
     const urlAccessToken = params.get('access_token');
     const urlRefreshToken = params.get('refresh_token');
+    const urlExpiresIn = params.get('expires_in'); // Assuming backend passes this
 
     if (urlAccessToken && urlRefreshToken) {
         spotifyAccessToken = urlAccessToken;
         spotifyRefreshToken = urlRefreshToken;
+        tokenExpiresAt = Date.now() + (parseInt(urlExpiresIn || '3600') * 1000); // Default to 1 hour if not provided
         localStorage.setItem('spotify_access_token', spotifyAccessToken);
         localStorage.setItem('spotify_refresh_token', spotifyRefreshToken);
+        localStorage.setItem('spotify_token_expires_at', tokenExpiresAt.toString());
         // Clear URL parameters to avoid re-processing on refresh
         window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -77,8 +87,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             if (token) {
                 cb(token);
             } else {
-                console.error('Could not get a valid access token for SDK.');
-                // Optionally redirect to login or show error
+                console.error('Could not get a valid access token for SDK. Redirecting to login.');
+                // If token cannot be obtained, redirect to login
+                window.location.href = `${BACKEND_URL}/login`;
             }
         },
         volume: 0.5
@@ -107,9 +118,16 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         const playPauseButton = document.getElementById('play-pause');
         if (state.paused) {
             playPauseButton.innerHTML = '<i class="fa fa-play"></i>';
+            clearInterval(progressBarInterval);
         } else {
             playPauseButton.innerHTML = '<i class="fa fa-pause"></i>';
+            // Start updating progress bar
+            clearInterval(progressBarInterval); // Clear any existing interval
+            progressBarInterval = setInterval(() => {
+                updateProgressBar(state.position, state.duration);
+            }, 1000); // Update every second
         }
+        updateProgressBar(state.position, state.duration); // Initial update
     });
 
     // Error handling
@@ -122,8 +140,10 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         // Clear tokens and prompt re-login
         localStorage.removeItem('spotify_access_token');
         localStorage.removeItem('spotify_refresh_token');
+        localStorage.removeItem('spotify_token_expires_at');
         spotifyAccessToken = null;
         spotifyRefreshToken = null;
+        tokenExpiresAt = 0;
     });
     player.addListener('account_error', ({ message }) => {
         console.error(message);
@@ -143,7 +163,30 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     document.getElementById('next-track').addEventListener('click', () => {
         player.nextTrack();
     });
+
+    document.getElementById('prev-track').addEventListener('click', () => {
+        player.previousTrack();
+    });
+
+    document.getElementById('stop-track').addEventListener('click', () => {
+        player.pause();
+        // Optionally seek to beginning
+        // player.seek(0); 
+        clearInterval(progressBarInterval);
+        updateProgressBar(0, 0); // Reset progress bar
+    });
 };
+
+// Function to update the progress bar
+function updateProgressBar(position, duration) {
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar && duration > 0) {
+        const progress = (position / duration) * 100;
+        progressBar.style.width = `${progress}%`;
+    } else if (progressBar) {
+        progressBar.style.width = '0%';
+    }
+}
 
 // Event listener for the Login button
 document.getElementById('login-button').addEventListener('click', () => {
@@ -152,7 +195,9 @@ document.getElementById('login-button').addEventListener('click', () => {
 
 // Function to play a specific track
 export const playTrack = async (uri) => {
-    if (!spotifyDeviceId || !spotifyAccessToken) {
+    // Ensure we have a fresh token before attempting playback
+    const token = await getValidAccessToken();
+    if (!spotifyDeviceId || !token) {
         console.error('Spotify player not ready or access token not available. Please log in.');
         alert('Spotify player not ready or access token not available. Please log in.');
         return;
@@ -165,7 +210,7 @@ export const playTrack = async (uri) => {
         body: JSON.stringify({ uris: [uri] }),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${spotifyAccessToken}`
+            'Authorization': `Bearer ${token}`
         },
     });
 
@@ -176,8 +221,10 @@ export const playTrack = async (uri) => {
             alert('Your Spotify session has expired. Please log in again.');
             localStorage.removeItem('spotify_access_token');
             localStorage.removeItem('spotify_refresh_token');
+            localStorage.removeItem('spotify_token_expires_at');
             spotifyAccessToken = null;
             spotifyRefreshToken = null;
+            tokenExpiresAt = 0;
         }
     }
 };

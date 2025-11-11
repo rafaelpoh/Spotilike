@@ -82,7 +82,7 @@ app.get('/callback', async (req, res) => {
             userAccessToken = data.access_token;
             userRefreshToken = data.refresh_token;
             // Redirect to frontend, passing tokens (e.g., via query params or localStorage)
-            res.redirect(`http://localhost:3000/?access_token=${userAccessToken}&refresh_token=${userRefreshToken}`);
+            res.redirect(`http://localhost:3000/?access_token=${userAccessToken}&refresh_token=${userRefreshToken}&expires_in=${data.expires_in}`);
         } else {
             res.status(response.status).json(data);
         }
