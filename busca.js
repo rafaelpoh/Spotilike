@@ -1,6 +1,7 @@
 // Make sure to add your Spotify API credentials in spotify-api.js for the search to work.
-import { searchSpotify, getFeaturedPlaylists } from "./spotify-api.js";
+import { searchSpotify, getFeaturedPlaylists, getArtistTopTracks } from "./spotify-api.js";
 import { displayPlaylists } from "./script.js";
+import { playTrack } from "./player.js";
 
 const resultArtist = document.getElementById("result-artist");
 const resultPlaylists = document.getElementById("result-playlists");
@@ -12,22 +13,28 @@ function requestApi(searchInput) {
     .then((results) => displayResults(results));
 }
 
-function displayResults(results) {
+async function displayResults(results) {
   hideSections();
-  resultArtists.innerHTML = ""; // Clear previous results
 
   if (results && results.artists && results.artists.items.length > 0) {
-    results.artists.items.forEach(artist => {
+    const offerListItem = resultArtists.querySelector(".offer__list-item");
+    offerListItem.innerHTML = ""; // Clear previous results from the inner container
+
+    for (const artist of results.artists.items) {
       const artistCard = document.createElement("div");
       artistCard.classList.add("artist-card");
       artistCard.id = artist.id;
 
       const artistImage = artist.images.length > 0 ? artist.images[0].url : "./src/imagens/icons/music-1085655_640.png";
 
+      // Fetch top tracks for the artist
+      const topTracks = await getArtistTopTracks(artist.id);
+      const topTrackUri = topTracks.length > 0 ? topTracks[0].uri : null;
+
       artistCard.innerHTML = `
         <div class="card-img">
           <img src="${artistImage}" alt="${artist.name}" class="artist-img">
-          <div class="play">
+          <div class="play" data-track-uri="${topTrackUri}">
             <span class="fa fa-solid fa-play"></span>
           </div>
         </div>
@@ -37,8 +44,16 @@ function displayResults(results) {
           <span class="artist-categorie">Artista</span>
         </div>
       `;
-      resultArtists.appendChild(artistCard);
-    });
+      offerListItem.appendChild(artistCard);
+
+      // Add event listener to the play button
+      const playButton = artistCard.querySelector(".play");
+      if (playButton && topTrackUri) {
+        playButton.addEventListener("click", () => {
+          playTrack(topTrackUri);
+        });
+      }
+    }
     resultArtists.classList.remove("hidden");
   } else {
     resultArtists.classList.add("hidden");

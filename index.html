@@ -44,30 +44,25 @@
                         <img src="./src/imagens/icons/search.png" alt="">
                         <input id="search-input" type="text" maxlength="800" placeholder="O que você quer ouvir?">
                     </div>
+                    <div class="player-controls">
+                        <!-- Player controls will go here -->
+                        <button id="play-pause"><i class="fa fa-play"></i></button>
+                        <button id="next-track"><i class="fa fa-forward"></i></button>
+                    </div>
+                    <div class="login-spotify">
+                        <button id="login-button">Login with Spotify</button>
+                    </div>
                 </div>
             </nav>
             <div class="main-container">
                 <div class="playlist-container">
                     <div id="result-playlists">
-                        <div class="playlist">
-                            <!-- COLOCAR O BOM DIA | BOA TARDE | BOA NOITE -->
-                            <h1 id="greeting">Bom dia</h1>
-
-                        </div>
-
-                        <div class="offer__list">
-                            <section class="offer__list-item">
-                                <!-- Playlists will be dynamically inserted here -->
-                            </section>
-                        </div>
+                        <h1 id="greeting">Bom dia</h1>
                     </div>
-
                     <div id="result-artists" class="hidden">
                         <section class="offer__list-item">
-                            <!-- Artists will be dynamically inserted here -->
                         </section>
                     </div>
-
                     <div id="result-artist" class="hidden">
                         <div class="grid-container">
                             <div class="artist-card" id="">
@@ -81,19 +76,22 @@
                                     <a title="Foo Fighters" class="vst" href=""></a>
                                     <span class="artist-name" id="artist-name"></span>
                                     <span class="artist-categorie">Artista</span>
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div id="spotify-player">
+                    <!-- Spotify Web Playback SDK player will be rendered here -->
                 </div>
             </div>
         </div>
     </main>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script type="module" src="./spotify-api.js"></script>
     <script type="module" src="./busca.js"></script>
     <script type="module" src="./script.js"></script>
+    <script type="module" src="./player.js"></script>
 </body>
 
 </html>
