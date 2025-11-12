@@ -1,16 +1,40 @@
 // spotify-api.js
 
-// Function to get an access token from your backend
-async function getAccessToken() {
-    const response = await fetch('http://localhost:3001/spotify-token'); // Your backend endpoint
-    const data = await response.json();
-    if (response.ok) {
-        return data.access_token;
-    } else {
-        console.error('Error fetching access token from backend:', data);
-        throw new Error('Failed to get access token');
+import config from './config.js';
+
+const getAccessToken = (function() {
+    let accessToken = null;
+    let expiresAt = 0;
+
+    async function fetchNewToken() {
+        try {
+            const response = await fetch(`${config.backendUrl}/spotify-token`); // Your backend endpoint
+            const data = await response.json();
+            if (response.ok) {
+                accessToken = data.access_token;
+                // expires_in is in seconds, convert to milliseconds
+                expiresAt = Date.now() + (data.expires_in * 1000);
+                return accessToken;
+            } else {
+                console.error('Error fetching access token from backend:', data);
+                throw new Error('Failed to get access token');
+            }
+        } catch (error) {
+            console.error('Error in fetchNewToken:', error);
+            throw error;
+        }
     }
-}
+
+    return async function() {
+        // If token is null or expired (with a 60-second buffer)
+        if (!accessToken || Date.now() >= expiresAt - 60000) {
+            console.log('Fetching new access token for client credentials...');
+            return await fetchNewToken();
+        }
+        console.log('Using cached client credentials access token.');
+        return accessToken;
+    };
+})();
 
 // Function to search for artists on Spotify
 async function searchSpotify(query, type = 'artist') {

@@ -23,6 +23,7 @@ greetingElement.textContent = greetingMessage;
 export function displayPlaylists(playlists) {
     const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
     playlistContainer.innerHTML = ''; // Clear existing content
+    const fragment = document.createDocumentFragment();
 
     playlists.forEach(playlist => {
         const card = document.createElement('a');
@@ -32,50 +33,19 @@ export function displayPlaylists(playlists) {
 
         const cardContent = `
             <div class="cards">
-                <img src="${playlist.images[0].url}" alt="">
+                <img src="${playlist.images[0].url}" alt="${playlist.name}">
                 <span>${playlist.name}</span>
             </div>
         `;
 
         card.innerHTML = cardContent;
-        playlistContainer.appendChild(card);
-    });
-}
-
-function displayArtists(albums) {
-    const artistContainer = document.querySelector('#result-artists .offer__list-item');
-    artistContainer.innerHTML = ''; // Clear existing content
-    const artistNames = new Set();
-
-    albums.forEach(album => {
-        const artist = album.artists[0];
-        if (!artistNames.has(artist.name)) {
-            artistNames.add(artist.name);
-
-            const card = document.createElement('a');
-            card.href = artist.external_urls.spotify;
-            card.target = '_blank';
-            card.classList.add('cards');
-
-            const cardContent = `
-                <div class="cards">
-                    <img src="${album.images[0].url}" alt="">
-                    <span>${artist.name}</span>
-                </div>
-            `;
-
-            card.innerHTML = cardContent;
-            artistContainer.appendChild(card);
-        }
+        fragment.appendChild(card);
     });
 
-    document.getElementById('result-artists').classList.remove('hidden');
+    playlistContainer.appendChild(fragment);
 }
 
 getFeaturedPlaylists().then(data => {
     displayPlaylists(data.playlists.items);
 });
 
-getNewReleases().then(data => {
-    displayArtists(data.albums.items);
-});

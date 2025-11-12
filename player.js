@@ -1,4 +1,4 @@
-// player.js
+import config from './config.js';
 
 let player;
 let currentTrack = null;
@@ -8,7 +8,7 @@ let spotifyRefreshToken = localStorage.getItem('spotify_refresh_token'); // Get 
 let tokenExpiresAt = localStorage.getItem('spotify_token_expires_at') ? parseInt(localStorage.getItem('spotify_token_expires_at')) : 0;
 let progressBarInterval;
 
-const BACKEND_URL = 'http://localhost:3001'; // Your backend URL
+const BACKEND_URL = config.backendUrl; // Your backend URL
 
 // Function to refresh the access token
 async function refreshAccessToken() {

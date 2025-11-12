@@ -15,11 +15,11 @@ function requestApi(searchInput) {
 
 async function displayResults(results) {
   hideSections();
+  const offerListItem = resultArtists.querySelector(".offer__list-item");
+  offerListItem.innerHTML = ""; // Clear previous results
 
   if (results && results.artists && results.artists.items.length > 0) {
-    const offerListItem = resultArtists.querySelector(".offer__list-item");
-    offerListItem.innerHTML = ""; // Clear previous results from the inner container
-
+    const fragment = document.createDocumentFragment();
     for (const artist of results.artists.items) {
       const artistCard = document.createElement("div");
       artistCard.classList.add("artist-card");
@@ -44,8 +44,7 @@ async function displayResults(results) {
           <span class="artist-categorie">Artista</span>
         </div>
       `;
-      offerListItem.appendChild(artistCard);
-
+      
       // Add event listener to the play button
       const playButton = artistCard.querySelector(".play");
       if (playButton && topTrackUri) {
@@ -53,10 +52,13 @@ async function displayResults(results) {
           playTrack(topTrackUri);
         });
       }
+      fragment.appendChild(artistCard);
     }
+    offerListItem.appendChild(fragment);
     resultArtists.classList.remove("hidden");
   } else {
-    resultArtists.classList.add("hidden");
+    offerListItem.innerHTML = '<p class="no-results">Nenhum resultado encontrado para sua busca.</p>';
+    resultArtists.classList.remove("hidden");
   }
 }
 
