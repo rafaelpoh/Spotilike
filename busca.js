@@ -1,9 +1,7 @@
 // Make sure to add your Spotify API credentials in spotify-api.js for the search to work.
-import { searchSpotify, getFeaturedPlaylists, getArtistTopTracks } from "./spotify-api.js";
-import { displayPlaylists } from "./script.js";
+import { searchSpotify, getArtistTopTracks } from "./spotify-api.js";
 import { playTrack } from "./player.js";
 
-const resultArtist = document.getElementById("result-artist");
 const resultPlaylists = document.getElementById("result-playlists");
 const resultArtists = document.getElementById("result-artists");
 const searchInput = document.getElementById("search-input");
@@ -15,7 +13,7 @@ function requestApi(searchInput) {
         console.error('Error during search:', error);
         const offerListItem = resultArtists.querySelector(".offer__list-item");
         if (offerListItem) {
-            offerListItem.innerHTML = '<p class="no-results">An error occurred during the search. Please try again later.</p>';
+            offerListItem.innerHTML = `<p class="no-results">An error occurred during the search. Error: ${error.message}</p>`;
         }
     });
 }
@@ -36,7 +34,7 @@ async function displayResults(results) {
 
       // Fetch top tracks for the artist
       const topTracks = await getArtistTopTracks(artist.id);
-      const topTrackUri = topTracks.length > 0 ? topTracks[0].uri : null;
+      const topTrackUri = topTracks && topTracks.length > 0 ? topTracks[0].uri : null;
 
       artistCard.innerHTML = `
         <div class="card-img">
@@ -72,19 +70,13 @@ async function displayResults(results) {
 function hideSections() {
     resultPlaylists.classList.add("hidden");
     resultArtists.classList.add("hidden");
-    resultArtist.classList.add("hidden"); // Hide the single artist card
-}
-
-function showSections() {
-    resultPlaylists.classList.remove("hidden");
-    resultArtists.classList.remove("hidden");
 }
 
 searchInput.addEventListener("input", () => {
   const searchTerm = searchInput.value.toLowerCase();
   if (searchTerm === "") {
-    resultArtist.classList.add("hidden");
-    showSections();
+    resultPlaylists.classList.remove("hidden");
+    resultArtists.classList.add("hidden");
     return;
   }
   requestApi(searchTerm);
@@ -93,13 +85,6 @@ searchInput.addEventListener("input", () => {
 const arrowLeftButton = document.querySelector(".arrow-left");
 arrowLeftButton.addEventListener("click", () => {
   searchInput.value = "";
-  resultArtists.classList.add("hidden"); // Hide search results
-  resultArtist.classList.add("hidden"); // Ensure single artist card is hidden
-  resultPlaylists.classList.remove("hidden"); // Show playlists
-  // Re-load and display the featured playlists
-  getFeaturedPlaylists().then(data => {
-    const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
-    playlistContainer.innerHTML = ''; // Clear existing content before re-loading
-    displayPlaylists(data.playlists.items);
-  });
+  const event = new Event('input', { bubbles: true });
+  searchInput.dispatchEvent(event);
 });

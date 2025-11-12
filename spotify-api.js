@@ -1,5 +1,4 @@
 // spotify-api.js
-
 import config from './config.js';
 
 const getAccessToken = (function() {
@@ -36,56 +35,52 @@ const getAccessToken = (function() {
     };
 })();
 
+async function spotifyFetch(url) {
+    try {
+        const accessToken = await getAccessToken();
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const error = data.error || {};
+            const errorMessage = error.message || response.statusText;
+            console.error(`Spotify API error for ${url}:`, data);
+            throw new Error(`Spotify API error: ${errorMessage}`);
+        }
+
+        console.log(`Successful response from ${url}:`, data);
+        return data;
+    } catch (error) {
+        console.error(`Error in spotifyFetch for ${url}:`, error);
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+
 // Function to search for artists on Spotify
 async function searchSpotify(query, type = 'artist') {
-    const accessToken = await getAccessToken();
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
-        }
-    });
-
-    const data = await response.json();
-    return data;
+    console.log(`Searching for ${type}: ${query}`);
+    return spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}`);
 }
 
 async function getFeaturedPlaylists() {
-    const accessToken = await getAccessToken();
-    const response = await fetch(`https://api.spotify.com/v1/browse/featured-playlists`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
-        }
-    });
-
-    const data = await response.json();
-    return data;
+    console.log('Fetching featured playlists... (DEBUG: searching for "rock" playlists instead)');
+    return spotifyFetch(`https://api.spotify.com/v1/search?q=rock&type=playlist`);
 }
 
 async function getNewReleases() {
-    const accessToken = await getAccessToken();
-    const response = await fetch(`https://api.spotify.com/v1/browse/new-releases`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
-        }
-    });
-
-    const data = await response.json();
-    return data;
+    console.log('Fetching new releases...');
+    return spotifyFetch(`https://api.spotify.com/v1/browse/new-releases`);
 }
 
 async function getArtistTopTracks(artistId) {
-    const accessToken = await getAccessToken();
-    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`, { // Using 'US' as a default market
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
-        }
-    });
-
-    const data = await response.json();
+    console.log(`Fetching top tracks for artist ${artistId}...`);
+    const data = await spotifyFetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`);
     return data.tracks;
 }
 

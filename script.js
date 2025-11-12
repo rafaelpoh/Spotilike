@@ -1,4 +1,6 @@
-import { getFeaturedPlaylists, getNewReleases } from './spotify-api.js';
+console.log('script.js loaded'); // For debugging
+
+import { getFeaturedPlaylists } from './spotify-api.js';
 
 //BOM DIA | BOA TARDE | BOA NOITE
 
@@ -26,37 +28,42 @@ export function displayPlaylists(playlists) {
     const fragment = document.createDocumentFragment();
 
     playlists.forEach(playlist => {
-        const card = document.createElement('a');
-        card.href = playlist.external_urls.spotify;
-        card.target = '_blank';
-        card.classList.add('cards');
+        if (playlist && playlist.external_urls && playlist.images && playlist.images.length > 0) {
+            const card = document.createElement('a');
+            card.href = playlist.external_urls.spotify;
+            card.target = '_blank';
+            card.classList.add('cards');
 
-        const cardContent = `
-            <div class="cards">
+            card.innerHTML = `
                 <img src="${playlist.images[0].url}" alt="${playlist.name}">
                 <span>${playlist.name}</span>
-            </div>
-        `;
+            `;
 
-        card.innerHTML = cardContent;
-        fragment.appendChild(card);
+            fragment.appendChild(card);
+        } else {
+            console.warn('Skipping a malformed playlist item:', playlist);
+        }
     });
 
     playlistContainer.appendChild(fragment);
 }
 
 getFeaturedPlaylists().then(data => {
-    if (data && data.playlists) {
+    if (data && data.playlists && data.playlists.items) {
         displayPlaylists(data.playlists.items);
     } else {
-        console.error('Could not retrieve featured playlists. The response may be malformed.');
+        console.error('Could not retrieve featured playlists. The response may be malformed:', data);
+        const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
+        if (playlistContainer) {
+            playlistContainer.innerHTML = '<p class="no-results">Could not load playlists. The response from the server was malformed.</p>';
+        }
     }
 }).catch(error => {
     console.error('Error fetching featured playlists:', error);
     // Here you could display a message to the user in the UI
     const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
     if (playlistContainer) {
-        playlistContainer.innerHTML = '<p class="no-results">Could not load playlists. Please try again later.</p>';
+        playlistContainer.innerHTML = `<p class="no-results">Could not load playlists. Error: ${error.message}</p>`;
     }
 });
 
