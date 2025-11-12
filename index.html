@@ -28,31 +28,6 @@
 
   <body>
     <main>
-      <div class="sidebar">
-        <nav class="sidebar_navigation">
-          <div>
-            <div class="logo">
-              <a href=""
-                ><img
-                  src="./src/imagens/icons/logo-spotify.png"
-                  alt="logo spotify"
-              /></a>
-            </div>
-            <ul>
-              <li>
-                <a href=""
-                  ><span class="fa fa-home"></span><span>Início</span></a
-                >
-              </li>
-              <li>
-                <a href=""
-                  ><span class="fa fa-search"></span><span>Buscar</span></a
-                >
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
       <div class="content-container">
         <nav class="header-nav">
           <div class="nav-left-items">
@@ -71,41 +46,31 @@
                 placeholder="O que você quer ouvir?"
               />
             </div>
-            <div class="player-controls">
-              <button id="prev-track"><i class="fa fa-backward"></i></button>
-              <button id="play-pause"><i class="fa fa-play"></i></button>
-              <button id="stop-track"><i class="fa fa-stop"></i></button>
-              <button id="next-track"><i class="fa fa-forward"></i></button>
-              <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
-              </div>
+            <div class="search-type-selector">
+              <input type="radio" id="search-type-artist" name="search-type" value="artist" checked>
+              <label for="search-type-artist">Artista</label>
+              <input type="radio" id="search-type-track" name="search-type" value="track">
+              <label for="search-type-track">Música</label>
             </div>
-          </div>
-          <div class="login-spotify">
-            <button id="login-button">Logar com Spotify</button>
+            <button id="shuffle-playlists-button" class="header-action-button" title="Embaralhar playlists">
+              <i class="fa fa-random"></i>
+            </button>
+            <div class="login-spotify">
           </div>
         </nav>
         <div class="main-container">
-          <div class="playlist-container">
-            <div id="result-playlists">
-              <h1 id="greeting">Bom dia</h1>
-              <section class="offer__list-item"></section>
-            </div>
-            <div id="result-artists" class="hidden">
-              <section class="offer__list-item"></section>
-            </div>
-
+          <div id="result-playlists" class="playlist-container">
+            <h1 id="greeting">Bom dia</h1>
+            <section class="offer__list-item"></section>
           </div>
-          <div id="spotify-player">
-            <!-- Spotify Web Playback SDK player will be rendered here -->
+          <div id="result-artists" class="playlist-container hidden">
+            <section class="offer__list-item"></section>
           </div>
         </div>
       </div>
     </main>
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script type="module" src="./spotify-api.js"></script>
     <script type="module" src="./busca.js"></script>
     <script type="module" src="./script.js"></script>
-    <script type="module" src="./player.js"></script>
   </body>
 </html>

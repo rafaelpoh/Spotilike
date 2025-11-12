@@ -6,144 +6,6 @@ body {
   background-color: #000000;
   font-family: var(--font);
 }
-.sidebar {
-  display: none;
-}
-.sidebar_navigation {
-  background-color: var(--bg-side-bar);
-  border-radius: 8px;
-  padding: 16px 0 16px 16px;
-}
-.logo{
-    background-color: var(--bg-icon);
-    display: flex;
-    border-radius: 8px;
-    padding: 20px 20px 20px 75px;
-    margin-right: 16px;
-
-}
-.logo img {
-width: 80px;
-}
-
-.sidebar nav ul{
-    margin-top: 20px;
-    padding: 0 20px 10px 80px;
-}
-.sidebar nav ul li{
-    padding: 10px 0;
-}
-.sidebar nav ul li a{
-    color: var(--text);
-    font-weight: 600;
-    font-size: 14px;
-}
-.biblioteca{
-  background-color: var(--bg-side-bar);
-  border-radius: 8px;
-  margin-top: 10px;
-  padding: 4px 8px;
-  color: var(--text);
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  font-weight: 600;
-  font-size: 14px;
-}
-.biblioteca .biblioteca_content{
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
-.biblioteca .biblioteca_button{
-  margin-right: 10px;
-  color: var(--text);
-  background-color: transparent;
-  border: 0;
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
-  text-transform: none;
-  padding: 20px 10px;
-  display: flex;
-}
-.biblioteca .biblioteca_button .fa{
-  font-size: 20px;
-  margin-right: 10px;
-  font-weight: 300;
-  padding-right: 8px;
-}
-.biblioteca .biblioteca_content .fa-plus{
-  margin: 24px 10px;
-}
-.playlist{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  color: var(--text);
-  background-color: var(--bg-side-bar);
-  font-weight: 600;
-  font-size: 14px;
-  margin: 8px 0;
-  padding: 16px 20px;
-  border-radius: 10px;
-}
-.playlist .playlist_content{
-  display: flex;
-  flex-direction: column;
-}
-.playlist_content .text{
-  padding-bottom: 14px;
-  color: var(--text-color);
-}
-.playlist_content .title{
-  font-weight: 700;
-}
-.playlist_content .subtitle{
-  font-weight: 500;
-  font-size: 12px;
-}
-.playlist_content .playlist_button{
-  display: flex;
-  justify-content: center;
-  background-color: var(--button-color);
-  color: var(--text);
-  font-weight: 700;
-  border-radius: 20px;
-  font-size: 15px ;
-  text-decoration: none;
-  text-transform: none;
-  padding: 10px;
-  border: 0;
-  width: 113px;
-  margin-top: 12px;
-}
-.sidebar .cookies{
-  margin: 20px 20px;
-}
-.sidebar .cookies a{
-    color: var(--text);
-    font-weight: 800;
-    font-size: 10px;
-    text-decoration: none;
-}
-.sidebar .cookies a:hover{
-  text-decoration: underline;
-}
-.sidebar .idiomas .idioma_button{
-  background-color: transparent;
-  border: 1px solid var(--text);
-  color: var(--text);
-  cursor: pointer;
-  align-items: center;
-  font-weight: bold;
-  width: 170px;
-  margin: 8px;
-  padding: 8px;
-  border-radius: 20px;
-}
 
 .content-container {
     margin-left: 0;
@@ -189,6 +51,39 @@ width: 80px;
     border-radius: 50%;
     cursor: pointer;
 }
+.header-action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-icon);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    margin-left: 8px;
+}
+.header-action-button:hover {
+    background-color: #252525;
+}
+.search-type-selector {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.search-type-selector input[type="radio"] {
+  margin-right: 5px;
+  accent-color: #1db954;
+}
+
+.search-type-selector label {
+  margin-right: 15px;
+  cursor: pointer;
+}
 .header-search{
     display: flex;
     align-items: center;
@@ -230,61 +125,16 @@ width: 80px;
     top: 1rem;
 }
 .login-spotify button:hover {
-    background-color: var(--bg-icon);
-}
-.header-login{
-    display: flex;
-    align-items: center;
-
-}
-.header-login .subscribe{
-    color: var(--text);
-    background: var(--bg-icon);
-    font-size: 16px;
-    font-weight: 700;
-    margin-right: 32px;
-    width: auto;
-    padding: 10px 20px;
-    height: 2rem;
-    border-radius: 15px;
-}
-.header-login .login{
-    color: var(--text);
-    background: var(--button-color);
-    font-size: 16px;
-    font-weight: 700;
-    width: auto;
-    padding: 10px 20px;
-    height: 2rem;
-    border-radius: 15px;
 }
 ----------------------------------------
-.playlist-container {
+  .playlist-container {
     height: 68vh;
-    padding-top: 16px;
+    padding-top: 16px;    padding-left: 24px;
     margin: 0;
     border-radius: 10px;
     background-color: var(--bg-container);
   }
   
-  .playlist {
-    margin: 0;
-  }
-  
-  .playlist #greeting {
-    color: var(--text-base-light);
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 48px;
-  }
-  
-  .playlist .session {
-    color: var(--text);
-    font-size: 24px;
-    font-weight: 700;
-  }
-  
-  /* SCROLL */
   .offer__scroll-container {
     max-height: 43vh;
     margin: 24px;
@@ -298,7 +148,6 @@ width: 80px;
   .offer__scroll-container::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
-  /* FIM SCROLL */
   
   .offer__list {
     width: 100%;
@@ -306,96 +155,26 @@ width: 80px;
   
   .offer__list-item {
     display: grid;
-    gap: 16px;
+    gap: 3px;
     grid-template-columns: repeat(5, 1fr);
-    margin: 0 auto;
+    grid-auto-rows: minmax(0, 1fr);
+    margin: 0;
   }
 
-.cards {
-    position: relative; /* relative:
-                            Comportamento em relação a si mesmo: O elemento é posicionado em relação à sua posição original.
-                            Mantém espaço original: O espaço original que o elemento ocuparia não é alterado, mas você pode movê-lo com top, right, bottom ou left. */
-    width: 220px;
-    height: 200px;
-    overflow: hidden;
-    border-radius: 8px;
-  }
-  
-  .cards span {
-    padding: 16px;
-    position: absolute;
-    /* absolute:
-                            Comportamento em relação ao ancestral posicionado mais próximo ou ao elemento raiz (se nenhum ancestral estiver posicionado).
-                            Remove do fluxo normal: O elemento é removido do fluxo normal do documento, o que significa que outros elementos agem como se o elemento não estivesse presente. */
-    color: var(--text);
-    font-size: 24px;
-    font-weight: 700;
-  }
-  .card1 {
-    background-color: rgb(red, green, blue);
-  }
-  .card2 {
-    background-color: rgb(132, 0, 231);
-  }
-  .card3 {
-    background: rgb(30, 50, 100);
-  }
-  .card4 {
-    background: rgb(140, 25, 50);
-  }
-  .card5 {
-    background: rgb(232, 17, 91);
-  }
-  .card6 {
-    background: rgb(83, 122, 161);
-  }
-  .card7 {
-    background: rgb(142, 102, 172);
-  }
-  .card8 {
-    background: rgb(20, 138, 8);
-  }
-  .card9 {
-    background: rgb(30, 50, 100);
-  }
-  .card10 {
-    background: rgb(233, 20, 41);
-  }
-  .card11 {
-    background: rgb(80, 55, 80);
-  }
-  .card12 {
-    background: rgb(216, 64, 0);
-  }
-  .card13 {
-    background: rgb(186, 93, 7);
-  }
-  .card14 {
-    background: rgb(0, 30, 80);
-  }
-  .card15 {
-    background: rgb(60, 30, 80);
-  }
-  .cards img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
+#result-playlists, #result-artists {
+    padding-top: 24px;
+}
   .artist-card {
     background: #181818;
     border-radius: 8px;
     -ms-flex: 1;
     flex: 1;
-    isolation: isolate;
-    padding: 16px;
+    isolation: isolate;    padding: 8px;
     position: relative;
     transition: background-color 0.3s ease;
-    width: 100%;
+    max-width: 10rem;
+    text-align: center;
+    border: solid 3px var(--bg-arrow);
   }
   
   .artist-card:hover {
@@ -406,15 +185,23 @@ width: 80px;
     padding-bottom: 100%;
     position: relative;
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
   
-  .artist-img {
+  .artist-img, .playlist-img {
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
     width: 100%;
+    object-fit: cover;
+  }
+
+  .playlist-img {
+    border-radius: 4px;
+  }
+
+  .artist-img {
     border-radius: 50%;
   }
   
@@ -425,7 +212,7 @@ width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    min-height: 62px;
+    min-height: 30px;
   }
   
   .card-text a {
@@ -447,35 +234,29 @@ width: 80px;
     font-weight: 400;
     font-size: 0.875rem;
   }
-  
-  .play {
-    position: relative;
+
+  .offer__scroll-container {
+    margin: 24px;
   }
   
-  .play .fa-play {
-    position: absolute;
-    right: 10px;
-    top: 120px;
-    padding: 18px;
-    background-color: var(--bg-icon);
-    border-radius: 100%;
-    font-size: 14px;
-    opacity: 0;
-    transition: all ease 0.4s;
+  .offer__scroll-container::-webkit-scrollbar {
+    width: 1px;
   }
   
-  .artist-card:hover .play .fa-play {
-    opacity: 1;
-    transform: translateY(-20px);
-  }
-  
-  .play .fa-play:hover {
-    padding: 20px;
-    cursor: pointer;
+  .offer__scroll-container::-webkit-scrollbar-thumb {
+    background-color: transparent;
   }
   
   #result-artist {
     padding: 20px 40px;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .playlist-container {
+    min-height: 68vh;
   }
 
 .premium {
@@ -519,50 +300,28 @@ width: 80px;
 
 @media screen and (max-width: 1015px) {
   .header__search {
-    /* display: none !important; */
     width: auto !important;
     display: none;
   }
 
-  /* .header__login .subscribe {
-    font-size: 12px !important;
-    padding: 10px !important;
-    margin-right: 5px !important;
-  } */
-
-  /* .offer__list-item {
-    grid-template-columns: 1fr 1fr !important;
-  } */
 }
 
 @media screen and (min-width: 1016px) and (max-width: 1140px) {
   .header__search {
-    /* display: none !important; */
     width: auto !important;
     display: none;
   }
 
-  /* .offer__list-item {
-    grid-template-columns: 1fr 1fr 1fr !important;
-  } */
 }
 
 @media screen and (max-width: 375px) {
-  .playlist {
-    display: none;
-  }
-
   .playlist-container {
-    width: 100%; /* Ocupa toda a largura disponível */
-    height: auto; /* Altura automática, ajusta conforme o conteúdo */
+    width: 100%;
+    height: auto;
   }
 
   .sidebar {
     width: 342px;
-  }
-
-  .offer__list-item {
-    grid-template-columns: 1fr;
   }
 
   .offer__scroll-container {

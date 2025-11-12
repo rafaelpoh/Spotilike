@@ -1,4 +1,3 @@
-// spotify-api.js
 import config from './config.js';
 
 const getAccessToken = (function() {
@@ -7,15 +6,22 @@ const getAccessToken = (function() {
 
     async function fetchNewToken() {
         try {
-            const response = await fetch(`${config.backendUrl}/spotify-token`); // Your backend endpoint
+            const response = await fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET)
+                },
+                body: 'grant_type=client_credentials'
+            });
+
             const data = await response.json();
             if (response.ok) {
                 accessToken = data.access_token;
-                // expires_in is in seconds, convert to milliseconds
                 expiresAt = Date.now() + (data.expires_in * 1000);
                 return accessToken;
             } else {
-                console.error('Error fetching access token from backend:', data);
+                console.error('Error fetching access token from Spotify API:', data);
                 throw new Error('Failed to get access token');
             }
         } catch (error) {
@@ -25,9 +31,8 @@ const getAccessToken = (function() {
     }
 
     return async function() {
-        // If token is null or expired (with a 60-second buffer)
         if (!accessToken || Date.now() >= expiresAt - 60000) {
-            console.log('Fetching new access token for client credentials...');
+            console.log('Fetching new access token for client credentials directly from Spotify...');
             return await fetchNewToken();
         }
         console.log('Using cached client credentials access token.');
@@ -58,24 +63,36 @@ async function spotifyFetch(url) {
         return data;
     } catch (error) {
         console.error(`Error in spotifyFetch for ${url}:`, error);
-        throw error; // Re-throw the error to be caught by the caller
+        throw error;
     }
 }
 
-// Function to search for artists on Spotify
 async function searchSpotify(query, type = 'artist') {
     console.log(`Searching for ${type}: ${query}`);
     return spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}`);
 }
 
-async function getFeaturedPlaylists() {
-    console.log('Fetching featured playlists... (DEBUG: searching for "rock" playlists instead)');
-    return spotifyFetch(`https://api.spotify.com/v1/search?q=rock&type=playlist`);
-}
+async function getFeaturedPlaylists(searchTerms = ['pop', 'rock', 'jazz', 'hip hop', 'electronic', 'classical', 'r&b', 'country', 'latin', 'indie']) {
+    console.log('Fetching diverse playlists...');
 
-async function getNewReleases() {
-    console.log('Fetching new releases...');
-    return spotifyFetch(`https://api.spotify.com/v1/browse/new-releases`);
+    const promises = searchTerms.map(term =>
+        spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(term)}&type=playlist&limit=10`)
+            .then(data => {
+                if (data && data.playlists && data.playlists.items) {
+                    return data.playlists.items.map(p => ({ ...p, theme: term }));
+                }
+                return [];
+            })
+            .catch(error => {
+                console.error(`Error fetching playlists for theme "${term}":`, error);
+                return [];
+            })
+    );
+
+    const results = await Promise.all(promises);
+    const allPlaylists = results.flat();
+
+    return { playlists: { items: allPlaylists } };
 }
 
 async function getArtistTopTracks(artistId) {
@@ -84,4 +101,4 @@ async function getArtistTopTracks(artistId) {
     return data.tracks;
 }
 
-export { searchSpotify, getFeaturedPlaylists, getNewReleases, getArtistTopTracks };
+export { searchSpotify, getFeaturedPlaylists, getArtistTopTracks };
