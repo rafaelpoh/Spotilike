@@ -46,6 +46,17 @@ export function displayPlaylists(playlists) {
 }
 
 getFeaturedPlaylists().then(data => {
-    displayPlaylists(data.playlists.items);
+    if (data && data.playlists) {
+        displayPlaylists(data.playlists.items);
+    } else {
+        console.error('Could not retrieve featured playlists. The response may be malformed.');
+    }
+}).catch(error => {
+    console.error('Error fetching featured playlists:', error);
+    // Here you could display a message to the user in the UI
+    const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
+    if (playlistContainer) {
+        playlistContainer.innerHTML = '<p class="no-results">Could not load playlists. Please try again later.</p>';
+    }
 });
 

@@ -168,19 +168,14 @@ width: 80px;
     height: 100vh;
     padding-top: 80px;
 }
-.nav{
-    display: flex;
-    justify-content: space-between; /* Changed from space-around */
-    align-items: center;
-}
 .nav-left-items {
     display: flex;
     align-items: center;
 }
-.header-nav .nav .arrow-left{
+.header-nav .arrow-left{
     margin-right: 1rem;
 }
-.header-nav .nav .arrow-right{
+.header-nav .arrow-right{
     margin-right: 2rem;
 }
 .arrow-left, .arrow-right{
@@ -230,9 +225,9 @@ width: 80px;
     border: none;
     cursor: pointer;
     margin-right: 1rem;
-    right: 2rem;
-    top: 1rem; 
-    position: absolute;/* Add some margin to the right */
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
 }
 .login-spotify button:hover {
     background-color: var(--bg-icon);
@@ -390,23 +385,8 @@ width: 80px;
     transform: rotate(25deg) translate(18%, -2%);
   }
   
-  /* CARD ARTISTA */
-  
-  .artist {
-    --column-count: 5;
-    --grid-gap: 24px;
-    --min-container-width: 372px;
-  }
-  
   .hidden {
     display: none;
-  }
-  
-  .grid-container {
-    grid-gap: var(--grid-gap);
-    display: grid;
-    grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
-    min-width: var(--min-container-width);
   }
   
   .artist-card {

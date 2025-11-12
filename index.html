@@ -55,42 +55,41 @@
       </div>
       <div class="content-container">
         <nav class="header-nav">
-          <div class="nav">
-            <div class="nav-left-items">
-              <button class="arrow-left">
-                <img
-                  src="./src/imagens/icons/small-left.png"
-                  alt="Seta indicando a esquerda"
-                />
-              </button>
-              <div class="header-search">
-                <img src="./src/imagens/icons/search.png" alt="" />
-                <input
-                  id="search-input"
-                  type="text"
-                  maxlength="800"
-                  placeholder="O que você quer ouvir?"
-                />
-              </div>
-              <div class="player-controls">
-                <button id="prev-track"><i class="fa fa-backward"></i></button>
-                <button id="play-pause"><i class="fa fa-play"></i></button>
-                <button id="stop-track"><i class="fa fa-stop"></i></button>
-                <button id="next-track"><i class="fa fa-forward"></i></button>
-                <div class="progress-bar-container">
-                  <div id="progress-bar" class="progress-bar"></div>
-                </div>
+          <div class="nav-left-items">
+            <button class="arrow-left">
+              <img
+                src="./src/imagens/icons/small-left.png"
+                alt="Seta indicando a esquerda"
+              />
+            </button>
+            <div class="header-search">
+              <img src="./src/imagens/icons/search.png" alt="" />
+              <input
+                id="search-input"
+                type="text"
+                maxlength="800"
+                placeholder="O que você quer ouvir?"
+              />
+            </div>
+            <div class="player-controls">
+              <button id="prev-track"><i class="fa fa-backward"></i></button>
+              <button id="play-pause"><i class="fa fa-play"></i></button>
+              <button id="stop-track"><i class="fa fa-stop"></i></button>
+              <button id="next-track"><i class="fa fa-forward"></i></button>
+              <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
               </div>
             </div>
-            <div class="login-spotify">
-              <button id="login-button">Logar com Spotify</button>
-            </div>
+          </div>
+          <div class="login-spotify">
+            <button id="login-button">Logar com Spotify</button>
           </div>
         </nav>
         <div class="main-container">
           <div class="playlist-container">
             <div id="result-playlists">
               <h1 id="greeting">Bom dia</h1>
+              <section class="offer__list-item"></section>
             </div>
             <div id="result-artists" class="hidden">
               <section class="offer__list-item"></section>

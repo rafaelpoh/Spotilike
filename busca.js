@@ -10,7 +10,14 @@ const searchInput = document.getElementById("search-input");
 
 function requestApi(searchInput) {
   searchSpotify(searchInput)
-    .then((results) => displayResults(results));
+    .then((results) => displayResults(results))
+    .catch(error => {
+        console.error('Error during search:', error);
+        const offerListItem = resultArtists.querySelector(".offer__list-item");
+        if (offerListItem) {
+            offerListItem.innerHTML = '<p class="no-results">An error occurred during the search. Please try again later.</p>';
+        }
+    });
 }
 
 async function displayResults(results) {
