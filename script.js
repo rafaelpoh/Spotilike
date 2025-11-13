@@ -1,5 +1,5 @@
 import { getFeaturedPlaylists, searchSpotify } from './spotify-api.js';
-import displayArtistTopTracks from './busca.js';
+import displayArtistTopTracks, { updateHeaderContextName, clearHeaderContextName } from './busca.js';
 import { resultArtists, hideSections } from './busca.js';
 
 const greetingElement = document.getElementById("greeting");
@@ -58,6 +58,7 @@ async function displayPlaylistContent(playlistName) {
 
     try {
         const results = await searchSpotify(playlistName, 'track');
+        updateHeaderContextName(playlistName);
 
         if (results && results.tracks && results.tracks.items.length > 0) {
             const fragment = document.createDocumentFragment();
@@ -108,6 +109,7 @@ async function loadAndDisplayPlaylists() {
 
     try {
         const data = await getFeaturedPlaylists(playlistThemes);
+        clearHeaderContextName();
         if (data && data.playlists && data.playlists.items) {
             let allPlaylists = data.playlists.items.filter(p => p && p.id && p.images && p.images.length > 0);
 

@@ -67,6 +67,15 @@ body {
 .header-action-button:hover {
     background-color: #252525;
 }
+.header-context-name {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-left: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .search-type-selector {
   display: flex;
   align-items: center;

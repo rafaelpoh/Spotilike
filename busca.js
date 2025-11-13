@@ -2,7 +2,18 @@ import { searchSpotify, getArtistTopTracks } from "./spotify-api.js";
 
 export const resultPlaylists = document.getElementById("result-playlists");
 export const resultArtists = document.getElementById("result-artists");
+const headerContextName = document.getElementById('header-context-name');
 const searchInput = document.getElementById("search-input");
+
+export function updateHeaderContextName(name) {
+    if (headerContextName) {
+        headerContextName.textContent = name;
+    }
+}
+
+export function clearHeaderContextName() {
+    if (headerContextName) headerContextName.textContent = '';
+}
 
 function requestApi(searchInput) {
   const searchType = document.querySelector('input[name="search-type"]:checked').value;
@@ -11,6 +22,7 @@ function requestApi(searchInput) {
       if (searchType === 'artist') {
         displayArtistResults(results);
       } else {
+        clearHeaderContextName();
         displayTrackResults(results);
       }
     })
@@ -112,6 +124,7 @@ export default async function displayArtistTopTracks(artistId, artistName) {
 
     try {
         const topTracks = await getArtistTopTracks(artistId);
+        updateHeaderContextName(artistName);
 
         if (topTracks && topTracks.length > 0) {
             const fragment = document.createDocumentFragment();
@@ -154,6 +167,7 @@ searchInput.addEventListener("input", () => {
     artistContent.innerHTML = "";
     resultPlaylists.classList.remove("hidden");
     resultArtists.classList.add("hidden");
+    clearHeaderContextName();
     return;
   }
   resultPlaylists.classList.add("hidden");
@@ -168,4 +182,5 @@ arrowLeftButton.addEventListener("click", () => {
   searchInput.value = "";
   resultPlaylists.classList.remove("hidden");
   resultArtists.classList.add("hidden");
+  clearHeaderContextName();
 });
