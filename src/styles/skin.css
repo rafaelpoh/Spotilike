@@ -362,3 +362,20 @@ body {
   text-align: center;
   padding: 20px;
 }
+
+.header-login-button {
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 500px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.header-login-button:hover {
+    transform: scale(1.05);
+}
