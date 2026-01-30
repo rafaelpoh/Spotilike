@@ -145,3 +145,53 @@ const shuffleButton = document.getElementById('shuffle-playlists-button');
 shuffleButton.addEventListener('click', loadAndDisplayPlaylists);
 
 loadAndDisplayPlaylists();
+
+// --- Integração com Spotify Player (Vercel) ---
+
+let player;
+let deviceId;
+
+async function initializeSpotifyPlayer() {
+    try {
+        // 1. Busca o token no nosso novo endpoint
+        const response = await fetch('/api/token');
+        if (!response.ok) {
+            console.log('Usuário não autenticado ou token expirado.');
+            return; // Não inicializa o player se não houver token
+        }
+        const data = await response.json();
+        const token = data.access_token;
+
+        // 2. Define a função que o SDK do Spotify chama quando estiver pronto
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            player = new Spotify.Player({
+                name: 'Spotilike Web Player',
+                getOAuthToken: cb => { cb(token); },
+                volume: 0.5
+            });
+
+            // Listeners de erro
+            player.addListener('initialization_error', ({ message }) => { console.error(message); });
+            player.addListener('authentication_error', ({ message }) => { console.error(message); });
+            player.addListener('account_error', ({ message }) => { console.error(message); });
+            player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+            // Listener de estado (quando toca música)
+            player.addListener('player_state_changed', state => { console.log(state); });
+
+            // Pronto
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+                deviceId = device_id;
+                // Aqui você pode salvar o deviceId para transferir a reprodução para cá
+            });
+
+            player.connect();
+        };
+    } catch (error) {
+        console.error('Erro ao inicializar player:', error);
+    }
+}
+
+// Chama a inicialização
+initializeSpotifyPlayer();
