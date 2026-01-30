@@ -1,28 +1,17 @@
-import config from './config.js';
-
 const getAccessToken = (function() {
     let accessToken = null;
-    let expiresAt = 0;
 
     async function fetchNewToken() {
         try {
-            const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(config.SPOTIFY_CLIENT_ID + ':' + config.SPOTIFY_CLIENT_SECRET)
-                },
-                body: 'grant_type=client_credentials'
-            });
-
-            const data = await response.json();
+            // Agora buscamos o token através do nosso backend no Vercel
+            const response = await fetch('/api/token');
             if (response.ok) {
+                const data = await response.json();
                 accessToken = data.access_token;
-                expiresAt = Date.now() + (data.expires_in * 1000);
                 return accessToken;
             } else {
-                console.error('Error fetching access token from Spotify API:', data);
-                throw new Error('Failed to get access token');
+                console.warn('Usuário não autenticado. Faça login para buscar músicas.');
+                return null;
             }
         } catch (error) {
             console.error('Error in fetchNewToken:', error);
@@ -31,11 +20,9 @@ const getAccessToken = (function() {
     }
 
     return async function() {
-        if (!accessToken || Date.now() >= expiresAt - 60000) {
-            console.log('Fetching new access token for client credentials directly from Spotify...');
+        if (!accessToken) {
             return await fetchNewToken();
         }
-        console.log('Using cached client credentials access token.');
         return accessToken;
     };
 })();
@@ -43,6 +30,11 @@ const getAccessToken = (function() {
 async function spotifyFetch(url) {
     try {
         const accessToken = await getAccessToken();
+        
+        if (!accessToken) {
+            throw new Error('Access token not available. Please login.');
+        }
+
         const response = await fetch(url, {
             method: 'GET',
             headers: {
