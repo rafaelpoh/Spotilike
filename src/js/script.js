@@ -151,6 +151,11 @@ loadAndDisplayPlaylists();
 let player;
 let deviceId;
 
+// Define a função globalmente ANTES de carregar o SDK
+window.onSpotifyWebPlaybackSDKReady = () => {
+    initializeSpotifyPlayer();
+};
+
 async function initializeSpotifyPlayer() {
     try {
         // 1. Busca o token no nosso novo endpoint
@@ -162,36 +167,37 @@ async function initializeSpotifyPlayer() {
         const data = await response.json();
         const token = data.access_token;
 
-        // 2. Define a função que o SDK do Spotify chama quando estiver pronto
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            player = new Spotify.Player({
-                name: 'Spotilike Web Player',
-                getOAuthToken: cb => { cb(token); },
-                volume: 0.5
-            });
+        player = new Spotify.Player({
+            name: 'Spotilike Web Player',
+            getOAuthToken: cb => { cb(token); },
+            volume: 0.5
+        });
 
-            // Listeners de erro
-            player.addListener('initialization_error', ({ message }) => { console.error(message); });
-            player.addListener('authentication_error', ({ message }) => { console.error(message); });
-            player.addListener('account_error', ({ message }) => { console.error(message); });
-            player.addListener('playback_error', ({ message }) => { console.error(message); });
+        // Listeners de erro
+        player.addListener('initialization_error', ({ message }) => { console.error(message); });
+        player.addListener('authentication_error', ({ message }) => { console.error(message); });
+        player.addListener('account_error', ({ message }) => { console.error(message); });
+        player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-            // Listener de estado (quando toca música)
-            player.addListener('player_state_changed', state => { console.log(state); });
+        // Listener de estado (quando toca música)
+        player.addListener('player_state_changed', state => { console.log(state); });
 
-            // Pronto
-            player.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-                deviceId = device_id;
-                // Aqui você pode salvar o deviceId para transferir a reprodução para cá
-            });
+        // Pronto
+        player.addListener('ready', ({ device_id }) => {
+            console.log('Ready with Device ID', device_id);
+            deviceId = device_id;
+            // Aqui você pode salvar o deviceId para transferir a reprodução para cá
+        });
 
-            player.connect();
-        };
+        player.connect();
+
     } catch (error) {
         console.error('Erro ao inicializar player:', error);
     }
 }
 
-// Chama a inicialização
-initializeSpotifyPlayer();
+// Carrega o SDK do Spotify dinamicamente agora que a função de callback está pronta
+const sdkScript = document.createElement('script');
+sdkScript.src = "https://sdk.scdn.co/spotify-player.js";
+sdkScript.async = true;
+document.body.appendChild(sdkScript);
