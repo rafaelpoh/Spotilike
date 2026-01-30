@@ -50,6 +50,7 @@ async function displayArtistResults(results) {
       artistCard.id = artist.id;
 
       const artistImage = artist.images.length > 0 ? artist.images[0].url : "./src/imagens/icons/music-1085655_640.png";
+      const artistImage = artist.images.length > 0 ? artist.images[0].url : "/src/imagens/icons/music-1085655_640.png";
 
       artistCard.innerHTML = `
         <div class="card-img">
@@ -88,6 +89,7 @@ function displayTrackResults(results) {
       trackCard.classList.add("artist-card");
 
       const trackImage = track.album.images.length > 0 ? track.album.images[0].url : './src/imagens/icons/music-1085655_640.png';
+      const trackImage = track.album.images.length > 0 ? track.album.images[0].url : '/src/imagens/icons/music-1085655_640.png';
 
       trackCard.innerHTML = `
           <div class="card-img">
@@ -134,6 +136,7 @@ export default async function displayArtistTopTracks(artistId, artistName) {
                 trackCard.innerHTML = `
                     <div class="card-img">
                         <img src="${track.album.images.length > 0 ? track.album.images[0].url : './src/imagens/icons/music-1085655_640.png'}" alt="${track.name}" class="artist-img">
+                        <img src="${track.album.images.length > 0 ? track.album.images[0].url : '/src/imagens/icons/music-1085655_640.png'}" alt="${track.name}" class="artist-img">
                     </div>
                     <div class="card-text">
                         <span class="artist-name">${track.name}</span>

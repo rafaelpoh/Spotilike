@@ -1,7 +1,0 @@
-// config.js
-const config = {
-    SPOTIFY_CLIENT_ID: '34a754277ee14a9d933839eb7c0cde26', // REPLACE WITH YOUR CLIENT ID
-    SPOTIFY_CLIENT_SECRET: 'ad1676819d00473d80608b3cc23bbc72' // REPLACE WITH YOUR CLIENT SECRET
-};
-
-export default config;
