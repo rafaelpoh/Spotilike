@@ -1,4 +1,4 @@
-import { getFeaturedPlaylists, searchSpotify } from './spotify-api.js';
+import { getFeaturedPlaylists, getPlaylistTracks } from './spotify-api.js';
 import displayArtistTopTracks, { updateHeaderContextName, clearHeaderContextName } from './busca.js';
 import { resultArtists, hideSections } from './busca.js';
 
@@ -27,6 +27,7 @@ export function displayPlaylists(playlists) {
             const card = document.createElement('div');
             card.classList.add('artist-card');
             card.dataset.playlistName = playlist.name;
+            card.dataset.id = playlist.id;
 
             card.innerHTML = `
                 <div class="card-img">
@@ -39,7 +40,7 @@ export function displayPlaylists(playlists) {
             `;
 
             card.addEventListener('click', () => {
-                displayPlaylistContent(playlist.name);
+                displayPlaylistContent(playlist.id, playlist.name);
             });
 
             fragment.appendChild(card);
@@ -51,18 +52,19 @@ export function displayPlaylists(playlists) {
     playlistContainer.appendChild(fragment);
 }
 
-async function displayPlaylistContent(playlistName) {
+async function displayPlaylistContent(playlistId, playlistName) {
     hideSections();
     const offerListItem = resultArtists.querySelector(".offer__list-item");    
     offerListItem.innerHTML = "";
 
     try {
-        const results = await searchSpotify(playlistName, 'track');
+        const results = await getPlaylistTracks(playlistId);
         updateHeaderContextName(playlistName);
 
-        if (results && results.tracks && results.tracks.items.length > 0) {
+        if (results && results.items && results.items.length > 0) {
             const fragment = document.createDocumentFragment();
-            results.tracks.items.slice(0, 10).forEach(track => {
+            results.items.slice(0, 10).forEach(item => {
+                const track = item.track;
                 const trackCard = document.createElement("div");
                 trackCard.classList.add("artist-card");
                 trackCard.innerHTML = `
@@ -97,34 +99,22 @@ async function displayPlaylistContent(playlistName) {
     }
 }
 
-const playlistThemes = [
-    'pop', 'rock', 'jazz', 'hip hop', 'electronic', 'classical', 'r&b', 'country', 'latin', 'indie',
-    'workout', 'sleep', 'focus', 'party', 'chill', 'gaming', 'travel', 'dinner', 'romance', 'blues',
-    'metal', 'folk', 'soul', 'funk', 'reggae', 'ambient', 'dance', 'gospel', 'kids', 'comedy'
-];
-
 async function loadAndDisplayPlaylists() {
     const playlistContainer = document.querySelector('#result-playlists .offer__list-item');
     playlistContainer.innerHTML = '<p class="no-results">Carregando playlists...</p>';
 
     try {
-        const data = await getFeaturedPlaylists(playlistThemes);
+        const data = await getFeaturedPlaylists();
         clearHeaderContextName();
         if (data && data.playlists && data.playlists.items) {
             let allPlaylists = data.playlists.items.filter(p => p && p.id && p.images && p.images.length > 0);
 
-            const uniquePlaylistsMap = new Map();
-            allPlaylists.forEach(playlist => {
-                uniquePlaylistsMap.set(playlist.id, playlist);
-            });
-
-            const uniquePlaylists = Array.from(uniquePlaylistsMap.values());
-
-            for (let i = uniquePlaylists.length - 1; i > 0; i--) {
+            // Shuffle the playlists
+            for (let i = allPlaylists.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [uniquePlaylists[i], uniquePlaylists[j]] = [uniquePlaylists[j], uniquePlaylists[i]];
+                [allPlaylists[i], allPlaylists[j]] = [allPlaylists[j], allPlaylists[i]];
             }
-            const finalPlaylists = uniquePlaylists.slice(0, 10);
+            const finalPlaylists = allPlaylists.slice(0, 10); // Take the first 10 after shuffling
 
             displayPlaylists(finalPlaylists);
         } else {

@@ -1,25 +1,58 @@
 const getAccessToken = (function() {
     let accessToken = null;
+    let isRefreshing = false;
+    let refreshPromise = null;
 
     async function fetchNewToken() {
         try {
-            // Agora buscamos o token através do nosso backend no Vercel
             const response = await fetch('/api/token');
             if (response.ok) {
                 const data = await response.json();
                 accessToken = data.access_token;
                 return accessToken;
             } else {
-                console.warn('Usuário não autenticado. Faça login para buscar músicas.');
+                console.warn('User not authenticated. Please login to use the search feature.');
                 return null;
             }
         } catch (error) {
-            console.error('Error in fetchNewToken:', error);
+            console.error('Error fetching initial token:', error);
             throw error;
         }
     }
 
-    return async function() {
+    async function refreshToken() {
+        if (!isRefreshing) {
+            isRefreshing = true;
+            refreshPromise = (async () => {
+                try {
+                    const response = await fetch('/api/refresh_token');
+                    if (response.ok) {
+                        const data = await response.json();
+                        accessToken = data.access_token;
+                        console.log('Token refreshed successfully.');
+                        return accessToken;
+                    } else {
+                        console.error('Failed to refresh token.');
+                        accessToken = null;
+                        // Maybe redirect to login here
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('Error during token refresh:', error);
+                    accessToken = null;
+                    return null;
+                } finally {
+                    isRefreshing = false;
+                }
+            })();
+        }
+        return refreshPromise;
+    }
+
+    return async function(forceRefresh = false) {
+        if (forceRefresh) {
+            return await refreshToken();
+        }
         if (!accessToken) {
             return await fetchNewToken();
         }
@@ -27,36 +60,40 @@ const getAccessToken = (function() {
     };
 })();
 
-async function spotifyFetch(url) {
-    try {
-        const accessToken = await getAccessToken();
-        
-        if (!accessToken) {
-            throw new Error('Access token not available. Please login.');
-        }
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + accessToken
-            }
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            const error = data.error || {};
-            const errorMessage = error.message || response.statusText;
-            console.error(`Spotify API error for ${url}:`, data);
-            throw new Error(`Spotify API error: ${errorMessage}`);
-        }
-
-        console.log(`Successful response from ${url}:`, data);
-        return data;
-    } catch (error) {
-        console.error(`Error in spotifyFetch for ${url}:`, error);
-        throw error;
+async function spotifyFetch(url, isRetry = false) {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+        throw new Error('Access token not available. Please login.');
     }
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken
+        }
+    });
+
+    if (response.status === 401 && !isRetry) {
+        console.warn('Access token expired. Refreshing and retrying...');
+        const newAccessToken = await getAccessToken(true); // Force refresh
+        if (newAccessToken) {
+            return spotifyFetch(url, true); // Retry the request
+        } else {
+            throw new Error('Failed to refresh token, please login again.');
+        }
+    }
+    
+    const data = await response.json();
+
+    if (!response.ok) {
+        const error = data.error || {};
+        const errorMessage = error.message || response.statusText;
+        console.error(`Spotify API error for ${url}:`, data);
+        throw new Error(`Spotify API error: ${errorMessage}`);
+    }
+
+    console.log(`Successful response from ${url}:`, data);
+    return data;
 }
 
 async function searchSpotify(query, type = 'artist') {
@@ -64,27 +101,10 @@ async function searchSpotify(query, type = 'artist') {
     return spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}`);
 }
 
-async function getFeaturedPlaylists(searchTerms = ['pop', 'rock', 'jazz', 'hip hop', 'electronic', 'classical', 'r&b', 'country', 'latin', 'indie']) {
-    console.log('Fetching diverse playlists...');
-
-    const promises = searchTerms.map(term =>
-        spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(term)}&type=playlist&limit=10`)
-            .then(data => {
-                if (data && data.playlists && data.playlists.items) {
-                    return data.playlists.items.map(p => ({ ...p, theme: term }));
-                }
-                return [];
-            })
-            .catch(error => {
-                console.error(`Error fetching playlists for theme "${term}":`, error);
-                return [];
-            })
-    );
-
-    const results = await Promise.all(promises);
-    const allPlaylists = results.flat();
-
-    return { playlists: { items: allPlaylists } };
+async function getFeaturedPlaylists() {
+    console.log('Fetching featured playlists...');
+    const data = await spotifyFetch(`https://api.spotify.com/v1/browse/featured-playlists?limit=20`);
+    return data;
 }
 
 async function getArtistTopTracks(artistId) {
@@ -93,4 +113,10 @@ async function getArtistTopTracks(artistId) {
     return data.tracks;
 }
 
-export { searchSpotify, getFeaturedPlaylists, getArtistTopTracks };
+async function getPlaylistTracks(playlistId) {
+    console.log(`Fetching tracks for playlist ${playlistId}...`);
+    const data = await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`);
+    return data;
+}
+
+export { searchSpotify, getFeaturedPlaylists, getArtistTopTracks, getPlaylistTracks };

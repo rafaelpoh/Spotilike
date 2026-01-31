@@ -50,14 +50,12 @@ async function displayArtistResults(results) {
       artistCard.id = artist.id;
 
       const artistImage = artist.images.length > 0 ? artist.images[0].url : "./src/imagens/icons/music-1085655_640.png";
-      const artistImage = artist.images.length > 0 ? artist.images[0].url : "/src/imagens/icons/music-1085655_640.png";
 
       artistCard.innerHTML = `
         <div class="card-img">
           <img src="${artistImage}" alt="${artist.name}" class="artist-img">
         </div>
         <div class="card-text">
-          <a title="${artist.name}" class="vst" href="${artist.external_urls.spotify}" target="_blank"></a>
           <span class="artist-name">${artist.name}</span>
           <span class="artist-categorie">Artista</span>
         </div>
@@ -89,7 +87,6 @@ function displayTrackResults(results) {
       trackCard.classList.add("artist-card");
 
       const trackImage = track.album.images.length > 0 ? track.album.images[0].url : './src/imagens/icons/music-1085655_640.png';
-      const trackImage = track.album.images.length > 0 ? track.album.images[0].url : '/src/imagens/icons/music-1085655_640.png';
 
       trackCard.innerHTML = `
           <div class="card-img">
@@ -136,7 +133,6 @@ export default async function displayArtistTopTracks(artistId, artistName) {
                 trackCard.innerHTML = `
                     <div class="card-img">
                         <img src="${track.album.images.length > 0 ? track.album.images[0].url : './src/imagens/icons/music-1085655_640.png'}" alt="${track.name}" class="artist-img">
-                        <img src="${track.album.images.length > 0 ? track.album.images[0].url : '/src/imagens/icons/music-1085655_640.png'}" alt="${track.name}" class="artist-img">
                     </div>
                     <div class="card-text">
                         <span class="artist-name">${track.name}</span>
@@ -163,27 +159,35 @@ export function hideSections() {
     resultArtists.classList.add("hidden");
 }
 
-searchInput.addEventListener("input", () => {
-  const searchTerm = searchInput.value.toLowerCase();
-  if (searchTerm === "") {
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+const debouncedRequestApi = debounce(requestApi, 400);
+
+function resetToDefaultView() {
     const artistContent = resultArtists.querySelector(".offer__list-item");
     artistContent.innerHTML = "";
+    if(searchInput) searchInput.value = "";
     resultPlaylists.classList.remove("hidden");
     resultArtists.classList.add("hidden");
     clearHeaderContextName();
-    return;
-  }
-  resultPlaylists.classList.add("hidden");
-  requestApi(searchTerm);
+}
+
+searchInput.addEventListener("input", () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    if (searchTerm === "") {
+        resetToDefaultView();
+        return;
+    }
+    resultPlaylists.classList.add("hidden");
+    debouncedRequestApi(searchTerm);
 });
 
 const arrowLeftButton = document.querySelector(".arrow-left");
-arrowLeftButton.addEventListener("click", () => {
-  const artistContent = resultArtists.querySelector(".offer__list-item");
-  const playlistContent = resultPlaylists.querySelector(".offer__list-item");
-  artistContent.innerHTML = "";
-  searchInput.value = "";
-  resultPlaylists.classList.remove("hidden");
-  resultArtists.classList.add("hidden");
-  clearHeaderContextName();
-});
+arrowLeftButton.addEventListener("click", resetToDefaultView);
