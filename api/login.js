@@ -9,11 +9,10 @@ import querystring from 'querystring';
 export default function handler(req, res) {
   const { SPOTIFY_CLIENT_ID } = process.env;
 
-  // O Vercel fornece esta variável de ambiente com a URL da implantação.
-  // Para desenvolvimento local, usaremos um valor padrão.
-  const REDIRECT_URI = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}/api/callback`
-    : 'http://localhost:3000/api/callback';
+  const host = req.headers.host;
+  // On Vercel, `x-forwarded-proto` is 'https'. Locally, it's undefined, so we default to 'http'.
+  const protocol = req.headers['x-forwarded-proto'] ? 'https' : 'http';
+  const REDIRECT_URI = `${protocol}://${host}/api/callback`;
 
   // O 'scope' define as permissões que estamos solicitando ao usuário.
   const scope =
