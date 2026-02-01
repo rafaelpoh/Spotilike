@@ -96,27 +96,25 @@ async function spotifyFetch(url, isRetry = false) {
     return data;
 }
 
-async function searchSpotify(query, type = 'artist') {
+export async function searchSpotify(query, type = 'artist') {
     console.log(`Searching for ${type}: ${query}`);
     return spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}`);
 }
 
-async function getFeaturedPlaylists() {
+export async function getFeaturedPlaylists() {
     console.log('Fetching featured playlists...');
     const data = await spotifyFetch(`https://api.spotify.com/v1/browse/featured-playlists?limit=20`);
     return data;
 }
 
-async function getArtistTopTracks(artistId) {
+export async function getArtistTopTracks(artistId) {
     console.log(`Fetching top tracks for artist ${artistId}...`);
     const data = await spotifyFetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`);
     return data.tracks;
 }
 
-async function getPlaylistTracks(playlistId) {
+export async function getPlaylistTracks(playlistId) {
     console.log(`Fetching tracks for playlist ${playlistId}...`);
     const data = await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`);
     return data;
 }
-
-export { searchSpotify, getFeaturedPlaylists, getArtistTopTracks, getPlaylistTracks };

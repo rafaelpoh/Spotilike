@@ -2,9 +2,7 @@
   "name": "spotilike",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "vercel dev"
-  },
+  "scripts": {},
   "devDependencies": {
     "@vercel/node": "^2.3.0",
     "vercel": "^32.0.0"
