@@ -61,6 +61,7 @@ const getAccessToken = (function() {
 })();
 
 async function spotifyFetch(url, isRetry = false) {
+    console.log('Requesting URL:', url); // Adicionando log da URL
     const accessToken = await getAccessToken();
     if (!accessToken) {
         throw new Error('Access token not available. Please login.');
