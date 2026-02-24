@@ -16,9 +16,9 @@ export default async function handler(req, res) {
 
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, VERCEL_URL } = process.env;
 
-  const REDIRECT_URI = VERCEL_URL
-    ? `https://spotilike.vercel.app/api/callback`
-    : "http://localhost:3000/api/callback";
+  const host = req.headers.host;
+  const protocol = req.headers["x-forwarded-proto"] || "http";
+  const REDIRECT_URI = `${protocol}://${host}/api/callback`;
 
   const authOptions = {
     method: "POST",

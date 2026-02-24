@@ -102,19 +102,8 @@ export async function searchSpotify(query, type = 'artist') {
 }
 
 export async function getFeaturedPlaylists() {
-    console.log('Fetching featured playlists without token...');
-    const url = `https://api.spotify.com/v1/browse/featured-playlists?limit=20`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!response.ok) {
-        const error = data.error || {};
-        const errorMessage = error.message || response.statusText;
-        console.error(`Spotify API error for ${url}:`, data);
-        throw new Error(`Spotify API error: ${errorMessage}`);
-    }
-
-    console.log(`Successful response from ${url}:`, data);
+    console.log('Fetching featured playlists...');
+    const data = await spotifyFetch(`https://api.spotify.com/v1/browse/featured-playlists?limit=20`);
     return data;
 }
 
