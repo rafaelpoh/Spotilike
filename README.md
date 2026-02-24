@@ -15,7 +15,7 @@ Funcionalidades principais
 
 Como o projeto demonstra habilidades
 ---------------------------------
-- Organização de layout com CSS moderno e variáveis de tema (`src/styles/`).
+- Organização de layout com CSS moderno e variáveis de tema (`css/`).
 - Uso de JavaScript modular (ES Modules) para separar responsabilidades entre carregamento, busca e integração com APIs.
 - Práticas de UX na apresentação de resultados e interações com cartões.
 
@@ -30,18 +30,23 @@ Estrutura resumida do projeto
 ----------------------------
 ```
 c:\Dev\Spotilike\
-├── busca.js
-├── config.js
 ├── index.html
 ├── package.json
-├── script.js
-├── spotify-api.js
-└── src/
-	├── imagens/
-	└── styles/
-		├── reset.css
-		├── skin.css
-		└── vars.css
+├── api/
+│   ├── login.js
+│   └── ...
+├── assets/
+│   └── icons/
+│       └── ...
+├── css/
+│   ├── reset.css
+│   ├── skin.css
+│   └── var.css
+└── js/
+    ├── main.js
+    ├── busca.js
+    ├── spotify-api.js
+    └── utils.js
 ```
 
 Como executar localmente

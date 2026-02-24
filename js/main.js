@@ -69,7 +69,7 @@ async function displayPlaylistContent(playlistId, playlistName) {
                 trackCard.classList.add("artist-card");
                 trackCard.innerHTML = `
                     <div class="card-img">
-                        <img src="${track.album.images.length > 0 ? track.album.images[0].url : '/src/imagens/icons/music-1085655_640.png'}" alt="${track.name}" class="playlist-img">
+                        <img src="${track.album.images.length > 0 ? track.album.images[0].url : '/assets/icons/music-1085655_640.png'}" alt="${track.name}" class="playlist-img">
                     </div>
                     <div class="card-text">
                         <span class="artist-name">${track.name}</span>
