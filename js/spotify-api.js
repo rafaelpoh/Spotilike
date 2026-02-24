@@ -62,6 +62,7 @@ const getAccessToken = (function() {
 
 async function spotifyFetch(url, isRetry = false) {
     const accessToken = await getAccessToken();
+    console.log('Access Token (do not share):', accessToken); // WARNING: For debugging only
     if (!accessToken) {
         throw new Error('Access token not available. Please login.');
     }
